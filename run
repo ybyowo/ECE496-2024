@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Ensure the script is being run from the correct directory
+PROJECT_DIR=$(dirname "$0")
+cd "$PROJECT_DIR"
+
+# Set the Java agent path
+AGENT_JAR="./target/my-instrumentation-project-1.0-SNAPSHOT.jar"
+
+# Set the classpath for the target application
+CLASSPATH="target/classes"
+
+# Set the main class to run
+MAIN_CLASS="com.example.ExampleClass"
+
+# Check if the agent JAR exists
+if [[ ! -f "$AGENT_JAR" ]]; then
+  echo "Error: Agent JAR not found at $AGENT_JAR"
+  exit 1
+fi
+
+# Check if the classes directory exists
+if [[ ! -d "$CLASSPATH" ]]; then
+  echo "Error: Classes directory not found at $CLASSPATH"
+  exit 1
+fi
+
+# Run the Java application with the agent
+java -javaagent:"$AGENT_JAR" -cp "$CLASSPATH" "$MAIN_CLASS"
