@@ -64,8 +64,8 @@ public class MyTransformer implements java.lang.instrument.ClassFileTransformer 
                         declaringClass.getName() + "." + COUNTER_FIELD + "++;" +
                         "System.out.println(\"Entering method: " + method.getLongName() + "\");" +
                         "System.out.println(\"Call count: \" + " + declaringClass.getName() + "." + COUNTER_FIELD + ");" +
-                        "System.out.println(\"Call stack: \" + java.util.Arrays.toString(Thread.currentThread().getStackTrace()));" +
-                        "com.example.CallGraphLogger.logMethodEnter(\"" + declaringClass.getName() + "\", \"" + method.getName() + "\");"
+                        "System.out.println(\"Call stack: \" + java.util.Arrays.toString(Thread.currentThread().getStackTrace()));" 
+                        +"com.example.CallGraphLogger.logMethodEnter(\"" + declaringClass.getName() + "\", \"" + method.getName() + "\");"
         );
 
         // 插入方法结束部分的代码
@@ -74,8 +74,8 @@ public class MyTransformer implements java.lang.instrument.ClassFileTransformer 
                         "long duration = System.nanoTime() - startTime;" +
                         "System.out.println(\"Exiting method: " + method.getLongName() + "\");" +
                         "System.out.println(\"Execution time: \" + duration + \" ns\");" +
-                        "System.out.println(\"Memory allocated: \" + (endMemory - startMemory) + \" bytes\");" +
-                        "com.example.CallGraphLogger.logMethodExit(\"" + declaringClass.getName() + "\", \"" + method.getName() + "\");"
+                        "System.out.println(\"Memory allocated: \" + (endMemory - startMemory) + \" bytes\");" 
+                        +"com.example.CallGraphLogger.logMethodExit(\"" + declaringClass.getName() + "\", \"" + method.getName() + "\");"
         );
     }
 }
