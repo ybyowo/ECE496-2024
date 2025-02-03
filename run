@@ -33,8 +33,8 @@ fi
 
 # Run the Java application with the agent
 # java -cp "$CLASSPATH" "$MAIN_CLASS"
-java -javaagent:"$AGENT_JAR" -cp "$CLASSPATH" "$MAIN_CLASS"
+# java -javaagent:"$AGENT_JAR" -cp "$CLASSPATH" "$MAIN_CLASS"
 
-# java  -javaagent:/home/fred/ece496/target/my-instrumentation-project-1.0-SNAPSHOT.jar -cp "/home/mark/pmd-bin-7.2.0/lib/*" -Xmx1024m net.sourceforge.pmd.cli.PmdCli cpd --minimum-tokens 100 --dir sfdx-scanner --format xml --language java --skip-lexical-errors
+java  -javaagent:/home/fred/ece496/target/my-instrumentation-project-1.0-SNAPSHOT.jar -cp "/home/mark/pmd-bin-7.2.0/lib/*" -Xmx1024m net.sourceforge.pmd.cli.PmdCli cpd --minimum-tokens 100 --dir sfdx-scanner --format xml --language java --skip-lexical-errors
 
 # java -cp "$CLASSPATH" "$MAIN_CLASS"

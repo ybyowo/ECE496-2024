@@ -11,6 +11,7 @@ import javassist.bytecode.MethodInfo;
 import javassist.*;
 
 public class MyTransformer implements java.lang.instrument.ClassFileTransformer {
+    
     private static final String COUNTER_FIELD = "__methodCounter";
 
     static {
@@ -22,7 +23,8 @@ public class MyTransformer implements java.lang.instrument.ClassFileTransformer 
     @Override
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined,
                             java.security.ProtectionDomain protectionDomain, byte[] classfileBuffer) {
-        if (className == null || className.startsWith("java/") || className.startsWith("sun/") || className.equals("com/example/CallGraphLogger")) {
+        if (className == null || className.startsWith("java/") || className.startsWith("sun/") 
+                || className.equals("com/example/CallGraphLogger")) {
             return null;
         }
 
@@ -30,24 +32,29 @@ public class MyTransformer implements java.lang.instrument.ClassFileTransformer 
             ClassPool classPool = ClassPool.getDefault();
             CtClass ctClass = classPool.get(className.replace("/", "."));
 
-            // 检查字段是否存在
+            // Skip instrumentation for interfaces (and optionally annotations/enums)
+            if (ctClass.isInterface() || ctClass.isAnnotation() || ctClass.isEnum()) {
+                return null;
+            }
+
+            // Check only for declared fields to avoid inherited ones.
             try {
-                ctClass.getField(COUNTER_FIELD);
+                ctClass.getDeclaredField(COUNTER_FIELD);
             } catch (NotFoundException e) {
-                // 如果字段不存在，添加一个静态字段
+                // Field not declared in this class, so add it.
                 CtField counterField = new CtField(CtClass.intType, COUNTER_FIELD, ctClass);
                 counterField.setModifiers(Modifier.STATIC);
                 ctClass.addField(counterField, "0");
             }
 
-            // 为每个方法插入代码
+            // Instrument each declared method
             for (CtMethod method : ctClass.getDeclaredMethods()) {
                 instrumentMethod(method, ctClass);
             }
 
             return ctClass.toBytecode();
         } catch (Exception e) {
-            // e.printStackTrace();
+            // Log or handle exception as needed
         }
         return null;
     }
